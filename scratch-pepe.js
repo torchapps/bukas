@@ -1,12 +1,22 @@
 var entries = [];
 var agencies = [];
 
+var fileFormats = new Set();
+var updateFreqs = new Set();
+
 function Agency(name, abbr){
 	this.name = name;
 	this.abbr = abbr;
+	this.entries = new EntrySet();
 }
 
 function Entry(row){
+
+	this.agency = _.find(agencies, function (agency){
+		return agency.name == row.agency_name;
+	});
+
+	this.agency.entries.add(this);
 
 	this.title = row.title;
 	this.description = row.description;
@@ -16,21 +26,30 @@ function Entry(row){
 	this.url = row.location_or_url;
 	this.source = row.original_data_owner;
 
-	// TODO - this.agency = findAgency(row.agency_name)
+	this.dateReleased = new Date(row.date_released);
+	if (isNaN(this.dateReleased)){
+		this.dateReleased += ": " + row.date_released;
+		console.error(this.dateReleased);
+	}
 
-	// TODO - file format
-	this.fileFormat = row.file_format;
-	
-	// TODO - standardize date released
-	this.dateReleased = row.date_released;
-	
-	// TODO - preprocess frequency of update
-	this.updateFreq = row.frequency_of_update
+	function splitTrimFilter(field, agg){
+		var r = field.split(",")
+			.map(function (_){ return _.trim(); })
+			.filter(function (_){ return _ != "-" ; });
+		r.forEach(function (f){ agg.add(f); });
+		return r;
+	}
+
+	this.fileFormats = splitTrimFilter(row.file_format, fileFormats);
+	this.updateFreqs = splitTrimFilter(row.frequency_of_update, updateFreqs);
 
 }
 
 function EntrySet(entries){
-
+	entries = entries || [];
+	this.add = function(entry){
+		entries.push(entry);
+	}
 }
 
 Papa.parse("adiaug2015.csv", {
@@ -46,7 +65,7 @@ Papa.parse("adiaug2015.csv", {
 
 		entries = _.chain(results.data).map(function (row){
 			return new Entry(row);
-		});
+		}).value();
 
 	}
 });
