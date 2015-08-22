@@ -1,0 +1,24 @@
+{
+  "name": "bukas",
+  "version": "0.0.1",
+  "description": "Monitoring the compliance of the agencies within the Philippine Government to Open Data standards",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/torchapps/bukas.git"
+  },
+  "author": "Levi Tan Ong <levi.ong@gmail.com> (https://github.com/levitanong)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/torchapps/bukas/issues"
+  },
+  "homepage": "https://github.com/torchapps/bukas",
+  "devDependencies": {
+    "babel-core": "^5.8.22",
+    "babel-loader": "^5.3.2",
+    "webpack": "^1.11.0"
+  }
+}
