@@ -12,10 +12,10 @@ function Agency(name, abbr){
 
 function Entry(row){
 
-  this.agency = _.find(agencies, function (agency){
-    return agency.name == row.agency_name;
-  });
-
+  // this.agency = _.find(agencies, function (agency){
+  //   return agency.name == row.agency_name;
+  // });
+  this.agency = agencies[row.agency_name];
   this.agency.entries.add(this);
 
   this.title = row.title;
@@ -71,10 +71,10 @@ function Entry(row){
 }
 
 function EntrySet(entries){
-  entries = entries || [];
+  this.entries = entries || [];
   this.add = function(entry){
-    entries.push(entry);
-  }
+    this.entries.push(entry);
+  }.bind(this);
 }
 
 Papa.parse("adiaug2015.csv", {
@@ -82,15 +82,17 @@ Papa.parse("adiaug2015.csv", {
   header: true,
   complete: function (results, file){
 
-    agencies = _.chain(results.data).unique(false, function (row){
-      return row.agency_name;
-    }).map(function (row){
-      return new Agency(row.agency_name, row.agency_abbrv);
-    }).value();
+    agencies = _.chain(results.data)
+      .unique(false, function (row){
+        return row.agency_name;
+      }).map(function (row){
+        return [row.agency_name, new Agency(row.agency_name, row.agency_abbrv)];
+      })
+      .zipObject()
+      .value();
 
     entries = _.chain(results.data).map(function (row){
       return new Entry(row);
     }).value();
-
   }
 });
