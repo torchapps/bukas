@@ -11,10 +11,7 @@ function Agency(name, abbr){
 }
 
 function Entry(row){
-
-  // this.agency = _.find(agencies, function (agency){
-  //   return agency.name == row.agency_name;
-  // });
+  
   this.agency = agencies[row.agency_name];
   this.agency.entries.add(this);
 
@@ -24,12 +21,6 @@ function Entry(row){
   this.maintainer = row.data_maintainer;
   this.url = row.location_or_url;
   this.source = row.original_data_owner;
-
-  // this.dateReleased = new Date(row.date_released);
-  // if (isNaN(this.dateReleased)){
-  //   this.dateReleased += ": " + row.date_released;
-  //   console.error(this.dateReleased);
-  // }
 
   const dateReleased = new Date(row.date_released);
   this.dateReleased = !isNaN(dateReleased)
