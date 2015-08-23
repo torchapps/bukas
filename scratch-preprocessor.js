@@ -24,15 +24,11 @@ function Entry(row){
 
   const dateReleased = new Date(row.date_released);
   this.dateReleased = !isNaN(dateReleased)
-  ? dateReleased
-  : (
-    row.date_released === "-"
-      ? null
-      : "Invalid Date: " + row.date_released
-    )
+    ? dateReleased
+    : row.date_released === "-" ? null : "Invalid Date: " + row.date_released
 
   if (isNaN(dateReleased) && this.dateReleased) {
-    console.log(this.dateReleased, this);
+    console.log(this.dateReleased, this, row);
   }
 
   function splitTrimFilter(field, agg){
@@ -51,6 +47,7 @@ function Entry(row){
         return _.parseInt(year);
       });
     } else {
+      console.log(disclosive, dateReleased);
       return disclosive;
     }
   }
