@@ -17,6 +17,20 @@ Papa.parse("adiaug2015.csv", {
       }
     }
 
-    disclosiveValues.forEach(function(d){console.log(assessDisclosiveValue(d))});
+    function processDisclosive(disclosive) {
+      if (disclosive === "-") {
+        return null;
+      } else if (disclosive.match(/\d{4}-\d{4}/)){
+        return disclosive.split("-").map(function(year){
+          return _.parseInt(year);
+        });
+      } else {
+        return disclosive;
+      }
+    }
+
+    console.log(disclosiveValues);
+
+    disclosiveValues.forEach(function(d){console.log(processDisclosive(d))});
   }
 });
