@@ -25,10 +25,23 @@ function Entry(row){
   this.url = row.location_or_url;
   this.source = row.original_data_owner;
 
-  this.dateReleased = new Date(row.date_released);
-  if (isNaN(this.dateReleased)){
-    this.dateReleased += ": " + row.date_released;
-    console.error(this.dateReleased);
+  // this.dateReleased = new Date(row.date_released);
+  // if (isNaN(this.dateReleased)){
+  //   this.dateReleased += ": " + row.date_released;
+  //   console.error(this.dateReleased);
+  // }
+
+  const dateReleased = new Date(row.date_released);
+  this.dateReleased = !isNaN(dateReleased)
+  ? dateReleased
+  : (
+    row.date_released === "-"
+      ? null
+      : "Invalid Date: " + row.date_released
+    )
+
+  if (isNaN(dateReleased) && this.dateReleased) {
+    console.log(this.dateReleased, this);
   }
 
   function splitTrimFilter(field, agg){
