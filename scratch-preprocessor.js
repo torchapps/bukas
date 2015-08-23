@@ -23,13 +23,18 @@ function Entry(row){
   this.source = row.original_data_owner;
 
   const dateReleased = new Date(row.date_released);
+
   this.dateReleased = !isNaN(dateReleased)
     ? dateReleased
     : row.date_released === "-" ? null : "Invalid Date: " + row.date_released
 
-  if (isNaN(dateReleased) && this.dateReleased) {
-    console.log(this.dateReleased, this, row);
+  if (this.dateReleased && this.dateReleased > new Date()) {
+    console.log("FUTURE", this.dateReleased);
   }
+
+  // if (isNaN(dateReleased) && this.dateReleased) {
+  //   console.log(this.dateReleased, this, row);
+  // }
 
   function splitTrimFilter(field, agg){
     var r = field.split(",")
@@ -39,7 +44,7 @@ function Entry(row){
     return r;
   }
 
-  function processDisclosive(disclosive) {
+  var processDisclosive = function (disclosive) {
     if (disclosive === "-") {
       return null;
     } else if (disclosive.match(/\d{4}-\d{4}/)){
@@ -47,10 +52,12 @@ function Entry(row){
         return _.parseInt(year);
       });
     } else {
-      console.log(disclosive, dateReleased);
+      if (this.onlinePub) {
+        // console.log(disclosive, dateReleased, row);
+      }
       return disclosive;
     }
-  }
+  }.bind(this);
 
   this.disclosive = processDisclosive(row.disclosive);
   this.fileFormats = splitTrimFilter(row.file_format, fileFormats);
