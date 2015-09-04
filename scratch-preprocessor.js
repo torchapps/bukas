@@ -29,7 +29,7 @@ function Entry(row){
     : row.date_released === "-" ? null : "Invalid Date: " + row.date_released
 
   if (this.dateReleased && this.dateReleased > new Date()) {
-    console.log("FUTURE", this.dateReleased);
+    // console.log("FUTURE", this.dateReleased);
   }
 
   // if (isNaN(dateReleased) && this.dateReleased) {
@@ -60,7 +60,7 @@ function Entry(row){
   }.bind(this);
 
   this.disclosive = processDisclosive(row.disclosive);
-  this.fileFormats = splitTrimFilter(row.file_format, fileFormats);
+  this.fileFormats = new Set(splitTrimFilter(row.file_format, fileFormats));
   this.updateFreqs = splitTrimFilter(row.frequency_of_update, updateFreqs);
 
 }
