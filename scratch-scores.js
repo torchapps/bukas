@@ -7,7 +7,7 @@ function fif (cond, ifres, elseres) {
 dataPromise.then(function(results){
   console.log(results);
 
-  function evaluateFileFormats(fileFormats) {
+  function evalFileFormats(fileFormats) {
     // fileFormats: Set
 
     /*
@@ -45,7 +45,7 @@ dataPromise.then(function(results){
     return val
   }
 
-  function evaluateUpdateFreqs(updateFreqs) {
+  function evalUpdateFreqs(updateFreqs) {
     // updateFreqs: Set
 
     /*
@@ -89,7 +89,7 @@ dataPromise.then(function(results){
 
   const fileFormatScore = _.chain(results.entries)
     .map(function(entry){
-      return evaluateFileFormats(entry.fileFormats);
+      return evalFileFormats(entry.fileFormats);
     })
     .reduce(_.add.bind(_))
     .value() / results.entries.length;
@@ -97,7 +97,7 @@ dataPromise.then(function(results){
   // hard to evaluate because depends on what is appropriate for the dataset.
   const updateFreqScore = _.chain(results.entries)
     .map(function(entry){
-      return evaluateUpdateFreqs(entry.updateFreqs);
+      return evalUpdateFreqs(entry.updateFreqs);
     })
     .reduce(_.add.bind(_))
     // .filter(function(entry){
