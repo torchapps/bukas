@@ -61,7 +61,7 @@ function Entry(row){
 
   this.disclosive = processDisclosive(row.disclosive);
   this.fileFormats = new Set(splitTrimFilter(row.file_format, fileFormats));
-  this.updateFreqs = splitTrimFilter(row.frequency_of_update, updateFreqs);
+  this.updateFreqs = new Set(splitTrimFilter(row.frequency_of_update, updateFreqs));
 
 }
 

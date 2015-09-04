@@ -7,8 +7,8 @@ function fif (cond, ifres, elseres) {
 dataPromise.then(function(results){
   console.log(results);
 
-  const evaluateFileFormats = function(fileFormats){
-    // fileFormats: Array
+  function evaluateFileFormats(fileFormats) {
+    // fileFormats: Set
 
     /*
     
@@ -27,7 +27,7 @@ dataPromise.then(function(results){
     Is there value in having multiple unusable datasets? powerpoint + pdf scans?
 
     */
-    //console.log(fileFormats);
+
     var val;
 
     if (fileFormats.has("CSV") || fileFormats.has("API")) {
@@ -40,6 +40,31 @@ dataPromise.then(function(results){
       val = 0.2;
     } else {
       val = 0;
+    }
+
+    return val
+  }
+
+  function evaluateUpdateFreqs(updateFreqs) {
+    // updateFreqs: Set
+
+    /*
+
+    First instinct is to say that tough to do this because some freqs are more relevant for some datasets.
+    However, it appears that most if not all these datasets have multiple frequencies. We can say that the more frequencies there are, the richer the datasets.
+    We can also say that if you have access to daily, you can derive all other frequencies. So, the higher the frequency, the better.
+
+    */
+
+    var val;
+
+    if (updateFreqs.has("Daily")) {
+      val = 1;
+    } 
+    else {
+      val = Math.min(updateFreqs.size / 5, 1)
+      console.log(val);
+      //console.log(val, results.updateFreqs.size);
     }
 
     return val
@@ -67,13 +92,20 @@ dataPromise.then(function(results){
       return evaluateFileFormats(entry.fileFormats);
     })
     .reduce(_.add.bind(_))
-    // .filter(function(entry){
-    //   return _.contains(entry.fileFormats, "CSV")
-    // })
-    // .pluck("fileFormats")
     .value() / results.entries.length;
 
-  console.log(fileFormatScore);
+  // hard to evaluate because depends on what is appropriate for the dataset.
+  const updateFreqScore = _.chain(results.entries)
+    .map(function(entry){
+      return evaluateUpdateFreqs(entry.updateFreqs);
+    })
+    .reduce(_.add.bind(_))
+    // .filter(function(entry){
+    //   return entry.updateFreqs.length > 2
+    // })
+    .value() / results.entries.length;
+
+  console.log(updateFreqScore);
 
   // console.log(results.entries.filter(function(entry) {
   //   return entry.dateReleased > new Date();
